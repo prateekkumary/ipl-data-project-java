@@ -47,6 +47,20 @@ public class Main {
 //    Number of matches won of all teams over all the years of IPL.
 
 
+    private static void getNumberOfMatchesWonByTeamPerYear(List<Match>matches){
+
+        Map<String,Map<String,Integer>>matchesWonPerYear=new HashMap<>();
+        for(Match match:matches){
+            String year=match.getSeason();
+            String winner=match.getWinner();
+
+            Map<String,Integer>map=matchesWonPerYear.getOrDefault(year,new HashMap<String,Integer>());
+            map.put(winner,map.getOrDefault(winner,0)+1);
+            matchesWonPerYear.put(year,map);
+        }
+        System.out.println((matchesWonPerYear));
+    }
+
 
 
 
@@ -133,7 +147,7 @@ public class Main {
 
        // Number of matches played per year of all the years in IPL.
 
-        //getMatchesPlayedByTeamPerYear(matches);
+        getMatchesPlayedByTeamPerYear(matches);
 
 //        Number of matches won of all teams over all the years of IPL.
         getNumberOfMatchesWonByTeamPerYear(matches);
