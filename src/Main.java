@@ -30,6 +30,23 @@ public class Main {
     private static final int superOver = 9;
 
 
+   // Number of matches played per year of all the years in IPL.
+
+    private static void getMatchesPlayedByTeamPerYear(List<Match>matches){
+        Map<String,Integer>matchesPerYear=new HashMap<>();
+        for(Match match:matches){
+            String year=match.getSeason();
+//            System.out.println(year);
+            matchesPerYear.put(year,matchesPerYear.getOrDefault(year,0)+1);
+        }
+        System.out.println(matchesPerYear);
+
+    }
+
+
+//    Number of matches won of all teams over all the years of IPL.
+
+
 
 
 
@@ -113,6 +130,13 @@ public class Main {
 
         List<Match> matches = getMatchData();
         List<Delivery> deliveries = getDeliveriesData();
+
+       // Number of matches played per year of all the years in IPL.
+
+        //getMatchesPlayedByTeamPerYear(matches);
+
+//        Number of matches won of all teams over all the years of IPL.
+        getNumberOfMatchesWonByTeamPerYear(matches);
 
 //        for (Match match : matches)
 //            System.out.println(match.getTeam1());
