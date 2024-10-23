@@ -25,19 +25,19 @@ public class Main {
     private static final int extraRun = 16;
     private static final int batsmanRun = 15;
     private static final int wide_runs = 11;
-    private static final int  dismissedPlayerName = 18;
+    private static final int dismissedPlayerName = 18;
     private static final int dismissalKind = 19;
     private static final int superOver = 9;
 
 
-   // Number of matches played per year of all the years in IPL.
+    // Number of matches played per year of all the years in IPL.
 
-    private static void getMatchesPlayedByTeamPerYear(List<Match>matches){
-        Map<String,Integer>matchesPerYear=new HashMap<>();
-        for(Match match:matches){
-            String year=match.getSeason();
+    private static void getMatchesPlayedByTeamPerYear(List<Match> matches) {
+        Map<String, Integer> matchesPerYear = new HashMap<>();
+        for (Match match : matches) {
+            String year = match.getSeason();
 //            System.out.println(year);
-            matchesPerYear.put(year,matchesPerYear.getOrDefault(year,0)+1);
+            matchesPerYear.put(year, matchesPerYear.getOrDefault(year, 0) + 1);
         }
         System.out.println(matchesPerYear);
 
@@ -47,16 +47,16 @@ public class Main {
 //    Number of matches won of all teams over all the years of IPL.
 
 
-    private static void getNumberOfMatchesWonByTeamPerYear(List<Match>matches){
+    private static void getNumberOfMatchesWonByTeamPerYear(List<Match> matches) {
 
-        Map<String,Map<String,Integer>>matchesWonPerYear=new HashMap<>();
-        for(Match match:matches){
-            String year=match.getSeason();
-            String winner=match.getWinner();
+        Map<String, Map<String, Integer>> matchesWonPerYear = new HashMap<>();
+        for (Match match : matches) {
+            String year = match.getSeason();
+            String winner = match.getWinner();
 
-            Map<String,Integer>map=matchesWonPerYear.getOrDefault(year,new HashMap<String,Integer>());
-            map.put(winner,map.getOrDefault(winner,0)+1);
-            matchesWonPerYear.put(year,map);
+            Map<String, Integer> map = matchesWonPerYear.getOrDefault(year, new HashMap<String, Integer>());
+            map.put(winner, map.getOrDefault(winner, 0) + 1);
+            matchesWonPerYear.put(year, map);
         }
         System.out.println((matchesWonPerYear));
     }
@@ -64,25 +64,83 @@ public class Main {
 
 //    For the year 2016 get the extra runs conceded per team.
 
-    private static void getExtraRunByTeamsIn2016(List<Match>matches,List<Delivery>deliveries,String year){
-      Set<Integer>ids=new HashSet<>();
-      for(Match match:matches){
-          if(match.getSeason().equals(year)){
-              ids.add(match.getMatchId());
-          }
-      }
+    private static void getExtraRunByTeamsIn2016(List<Match> matches, List<Delivery> deliveries, String year) {
+        Set<Integer> ids = new HashSet<>();
+        for (Match match : matches) {
+            if (match.getSeason().equals(year)) {
+                ids.add(match.getMatchId());
+            }
+        }
 //      System.out.println((ids));
-        Map<String,Integer>extraRunByTeamIn2016=new HashMap<>();
+        Map<String, Integer> extraRunByTeamIn2016 = new HashMap<>();
 
-      for(Delivery delivery:deliveries){
-          String battingTeam=delivery.getBattingTeam();
-          int runs=delivery.getExtraRuns();
-          if(ids.contains(delivery.getDeliveryMatchId())){
-              extraRunByTeamIn2016.put(battingTeam,extraRunByTeamIn2016.getOrDefault(battingTeam,runs)+runs);
-          }
-      }
-      System.out.println(extraRunByTeamIn2016);
+        for (Delivery delivery : deliveries) {
+            String battingTeam = delivery.getBattingTeam();
+            int runs = delivery.getExtraRuns();
+            if (ids.contains(delivery.getDeliveryMatchId())) {
+                extraRunByTeamIn2016.put(battingTeam, extraRunByTeamIn2016.getOrDefault(battingTeam, runs) + runs);
+            }
+        }
+        System.out.println(extraRunByTeamIn2016);
     }
+
+
+
+    //    For the year 2015 get the top economical bowlers.
+
+    private static void getTopEconomyBowlerInParticularYear(List<Match> matches, List<Delivery> deliveries, String year) {
+        Set<Integer> ids = new HashSet<>();
+
+
+        Map<String, Integer> concededRuns = new HashMap<>();
+        Map<String, Integer> validBall = new HashMap<>();
+        for (Match match : matches) {
+            if (match.getSeason().equals(year)) {
+                ids.add(match.getMatchId());
+            }
+        }
+//        System.out.println(ids);
+        Map<String, Integer> bolwerWithEconomy = new HashMap<>();
+        for (Delivery delivery : deliveries) {
+
+            if (ids.contains(delivery.getDeliveryMatchId())) {
+                int isValidBalls = (delivery.getNoballRuns() == 0 && delivery.getWideRuns() == 0) ? 1 : 0;
+
+                int totalRuns = delivery.getTotalRuns();
+
+                String bolwer = delivery.getBolwer();
+                concededRuns.put(bolwer, concededRuns.getOrDefault(bolwer, 0) + totalRuns);
+                validBall.put(bolwer, validBall.getOrDefault(bolwer, 0) + isValidBalls);
+
+            }
+        }
+        Map<String, Double> economyRate = new HashMap<>();
+        for (String bolwer : validBall.keySet()) {
+            int totalBalls = validBall.get(bolwer);
+            int totalRuns = concededRuns.get(bolwer);
+
+            double over = totalBalls / 6.0;
+            double economicalBolwer;
+            if (over == 0) {
+                economicalBolwer = 0.0d;
+            } else {
+                economicalBolwer = totalRuns / over;
+            }
+            economyRate.put(bolwer, economicalBolwer);
+        }
+        String topEconomicalBolwer = "";
+        double lowestEconomy = Double.MAX_VALUE;
+
+        for (Map.Entry<String, Double> entry : economyRate.entrySet()) {
+            if (entry.getValue() < lowestEconomy) {
+                lowestEconomy = entry.getValue();
+                topEconomicalBolwer = entry.getKey();
+            }
+        }
+        System.out.println("Top economy bowler is: " + topEconomicalBolwer+" and with economy: "+lowestEconomy);
+    }
+
+
 
 
 
@@ -133,6 +191,8 @@ public class Main {
 
 
 
+
+
     private static List<Match> getMatchData() {
         List<Match> matches = new ArrayList<>();
         String filepath = "./data/matches.csv";
@@ -162,37 +222,25 @@ public class Main {
     }
 
 
-
     public static void main(String[] args) {
 
         List<Match> matches = getMatchData();
         List<Delivery> deliveries = getDeliveriesData();
 
-       // Number of matches played per year of all the years in IPL.
-
+//         Number of matches played per year of all the years in IPL.
 //        getMatchesPlayedByTeamPerYear(matches);
 
 //        Number of matches won of all teams over all the years of IPL.
 //        getNumberOfMatchesWonByTeamPerYear(matches);
 
 //        For the year 2016 get the extra runs conceded per team.
-
-        getExtraRunByTeamsIn2016(matches,deliveries,"2016");
-
+//       getExtraRunByTeamsIn2016(matches,deliveries,"2016");
 
 
+//        For the year 2015 get the top economical bowlers.
+        getTopEconomyBowlerInParticularYear(matches, deliveries, "2010");
 
 
-
-
-
-
-//        for (Match match : matches)
-//            System.out.println(match.getTeam1());
-//    }
-//        for (Delivery delivery : deliveries) {
-//            System.out.println(delivery.getPlayerDismissed());
-//        }
     }
 }
 
