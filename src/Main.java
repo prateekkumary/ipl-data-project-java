@@ -62,6 +62,29 @@ public class Main {
     }
 
 
+//    For the year 2016 get the extra runs conceded per team.
+
+    private static void getExtraRunByTeamsIn2016(List<Match>matches,List<Delivery>deliveries,String year){
+      Set<Integer>ids=new HashSet<>();
+      for(Match match:matches){
+          if(match.getSeason().equals(year)){
+              ids.add(match.getMatchId());
+          }
+      }
+//      System.out.println((ids));
+        Map<String,Integer>extraRunByTeamIn2016=new HashMap<>();
+
+      for(Delivery delivery:deliveries){
+          String battingTeam=delivery.getBattingTeam();
+          int runs=delivery.getExtraRuns();
+          if(ids.contains(delivery.getDeliveryMatchId())){
+              extraRunByTeamIn2016.put(battingTeam,extraRunByTeamIn2016.getOrDefault(battingTeam,runs)+runs);
+          }
+      }
+      System.out.println(extraRunByTeamIn2016);
+    }
+
+
 
 
     private static List<Delivery> getDeliveriesData() {
@@ -147,10 +170,22 @@ public class Main {
 
        // Number of matches played per year of all the years in IPL.
 
-        getMatchesPlayedByTeamPerYear(matches);
+//        getMatchesPlayedByTeamPerYear(matches);
 
 //        Number of matches won of all teams over all the years of IPL.
-        getNumberOfMatchesWonByTeamPerYear(matches);
+//        getNumberOfMatchesWonByTeamPerYear(matches);
+
+//        For the year 2016 get the extra runs conceded per team.
+
+        getExtraRunByTeamsIn2016(matches,deliveries,"2016");
+
+
+
+
+
+
+
+
 
 //        for (Match match : matches)
 //            System.out.println(match.getTeam1());
