@@ -141,6 +141,37 @@ public class Main {
     }
 
 
+    public static Map<String,Integer> highestRunWithMatchId(List<Match>matches,List<Delivery>deliveries,int id){
+        Set<Integer>ids=new HashSet<>();
+        for(Match match:matches){
+            if(id==match.getMatchId()){
+                ids.add(match.getMatchId());
+            }
+        }
+        Map<String,Integer>highestRunWithId=new HashMap<>();
+
+        for(Delivery delivery:deliveries){
+            if(ids.contains(delivery.getDeliveryMatchId())){
+                Integer batsManRun=delivery.getBatsmanRuns();
+                String batsman=delivery.getBatsman();
+                highestRunWithId.put(batsman,highestRunWithId.getOrDefault(batsman,batsManRun)+batsManRun);
+            }
+        }
+        String batsMan="";
+        Integer highestRuns=Integer.MIN_VALUE;
+        Map<String,Integer>result=new HashMap<>();
+        for(Map.Entry<String,Integer>entry:highestRunWithId.entrySet()){
+            if(entry.getValue()>highestRuns){
+                highestRuns=entry.getValue();
+                batsMan=entry.getKey();
+            }
+        }
+        result.put(batsMan,highestRuns);
+
+        return  result;
+    }
+
+
 
 
 
@@ -236,9 +267,9 @@ public class Main {
 //        For the year 2016 get the extra runs conceded per team.
 //       getExtraRunByTeamsIn2016(matches,deliveries,"2016");
 
-
+          System.out.println(highestRunWithMatchId(matches,deliveries,1));
 //        For the year 2015 get the top economical bowlers.
-        getTopEconomyBowlerInParticularYear(matches, deliveries, "2010");
+//        getTopEconomyBowlerInParticularYear(matches, deliveries, "2010");
 
 
     }
